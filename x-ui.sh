@@ -103,7 +103,7 @@ confirm_restart() {
 }
 
 before_show_menu() {
-    echo && echo -n -e "${yellow}Press enter to return to the main menu: ${plain}" && read -r temp
+    echo && echo -n -e "${yellow}按回车返回主菜单：${plain}" && read -r temp
     show_menu
 }
 
@@ -159,7 +159,7 @@ update_menu() {
 }
 
 legacy_version() {
-    echo -n "Enter the panel version (like 2.4.0):"
+    echo -n "请输入面板版本（例如 2.4.0）："
     read -r tag_version
 
     if [ -z "$tag_version" ]; then
@@ -180,7 +180,7 @@ delete_script() {
 }
 
 uninstall() {
-    confirm "Are you sure you want to uninstall the panel? xray will also uninstalled!" "n"
+    confirm "确定要卸载面板吗？xray 也会被一并卸载！" "n"
     if [[ $? != 0 ]]; then
         if [[ $# == 0 ]]; then
             show_menu
@@ -214,7 +214,7 @@ uninstall() {
 }
 
 reset_user() {
-    confirm "Are you sure to reset the username and password of the panel?" "n"
+    confirm "确定要重置面板用户名和密码吗？" "n"
     if [[ $? != 0 ]]; then
         if [[ $# == 0 ]]; then
             show_menu
@@ -222,12 +222,12 @@ reset_user() {
         return 0
     fi
     
-    read -rp "Please set the login username [default is a random username]: " config_account
+    read -rp "请输入登录用户名【默认随机生成】：" config_account
     [[ -z $config_account ]] && config_account=$(gen_random_string 10)
-    read -rp "Please set the login password [default is a random password]: " config_password
+    read -rp "请输入登录密码【默认随机生成】：" config_password
     [[ -z $config_password ]] && config_password=$(gen_random_string 18)
 
-    read -rp "Do you want to disable currently configured two-factor authentication? (y/n): " twoFactorConfirm
+    read -rp "是否禁用当前已配置的双重认证？(y/n)：" twoFactorConfirm
     if [[ $twoFactorConfirm != "y" && $twoFactorConfirm != "Y" ]]; then
         ${xui_folder}/x-ui setting -username "${config_account}" -password "${config_password}" -resetTwoFactor false >/dev/null 2>&1
     else
@@ -237,7 +237,7 @@ reset_user() {
     
     echo -e "Panel login username has been reset to: ${green} ${config_account} ${plain}"
     echo -e "Panel login password has been reset to: ${green} ${config_password} ${plain}"
-    echo -e "${green} Please use the new login username and password to access the X-UI panel. Also remember them! ${plain}"
+    echo -e "${green} 请使用新的用户名和密码登录 X-UI 面板，并妥善保存！ ${plain}"
     confirm_restart
 }
 
@@ -251,9 +251,9 @@ gen_random_string() {
 reset_webbasepath() {
     echo -e "${yellow}Resetting Web Base Path${plain}"
 
-    read -rp "Are you sure you want to reset the web base path? (y/n): " confirm
+    read -rp "确定要重置 Web 基础路径吗？(y/n)：" confirm
     if [[ $confirm != "y" && $confirm != "Y" ]]; then
-        echo -e "${yellow}Operation canceled.${plain}"
+        echo -e "${yellow}操作已取消。${plain}"
         return
     fi
 
@@ -263,12 +263,12 @@ reset_webbasepath() {
     ${xui_folder}/x-ui setting -webBasePath "${config_webBasePath}" >/dev/null 2>&1
 
     echo -e "Web base path has been reset to: ${green}${config_webBasePath}${plain}"
-    echo -e "${green}Please use the new web base path to access the panel.${plain}"
+    echo -e "${green}请使用新的 Web 基础路径访问面板。${plain}"
     restart
 }
 
 reset_config() {
-    confirm "Are you sure you want to reset all panel settings, Account data will not be lost, Username and password will not change" "n"
+    confirm "确定要重置所有面板设置吗？账号数据不会丢失，用户名和密码不会改变。" "n"
     if [[ $? != 0 ]]; then
         if [[ $# == 0 ]]; then
             show_menu
@@ -306,9 +306,9 @@ check_config() {
             echo -e "${green}Access URL: https://${server_ip}:${existing_port}${existing_webBasePath}${plain}"
         fi
     else
-        echo -e "${red}⚠ WARNING: No SSL certificate configured!${plain}"
+        echo -e "${red}⚠ 警告：未配置 SSL 证书！${plain}"
         echo -e "${yellow}You can get a Let's Encrypt certificate for your IP address (valid ~6 days, auto-renews).${plain}"
-        read -rp "Generate SSL certificate for IP now? [y/N]: " gen_ssl
+        read -rp "现在为 IP 生成 SSL 证书吗？[y/N]：" gen_ssl
         if [[ "$gen_ssl" == "y" || "$gen_ssl" == "Y" ]]; then
             stop >/dev/null 2>&1
             ssl_cert_issue_for_ip
@@ -329,14 +329,14 @@ check_config() {
 }
 
 set_port() {
-    echo -n "Enter port number[1-65535]: "
+    echo -n "请输入端口号 [1-65535]："
     read -r port
     if [[ -z "${port}" ]]; then
         LOGD "Cancelled"
         before_show_menu
     else
         ${xui_folder}/x-ui setting -port ${port}
-        echo -e "The port is set, Please restart the panel now, and use the new port ${green}${port}${plain} to access web panel"
+        echo -e "端口已设置，请立即重启面板，并使用新端口 ${green}${port}${plain} 访问 Web 面板"
         confirm_restart
     fi
 }
@@ -467,8 +467,8 @@ disable() {
 show_log() {
     if [[ $release == "alpine" ]]; then
         echo -e "${green}\t1.${plain} Debug Log"
-        echo -e "${green}\t0.${plain} Back to Main Menu"
-        read -rp "Choose an option: " choice
+        echo -e "${green}\t0.${plain} 返回主菜单"
+        read -rp "请选择操作：" choice
 
         case "$choice" in
         0)
@@ -481,15 +481,15 @@ show_log() {
             fi
             ;;
         *)
-            echo -e "${red}Invalid option. Please select a valid number.${plain}\n"
+            echo -e "${red}无效选项，请输入正确的编号。${plain}\n"
             show_log
             ;;
         esac
     else
         echo -e "${green}\t1.${plain} Debug Log"
         echo -e "${green}\t2.${plain} Clear All logs"
-        echo -e "${green}\t0.${plain} Back to Main Menu"
-        read -rp "Choose an option: " choice
+        echo -e "${green}\t0.${plain} 返回主菜单"
+        read -rp "请选择操作：" choice
 
         case "$choice" in
         0)
@@ -508,7 +508,7 @@ show_log() {
             restart
             ;;
         *)
-            echo -e "${red}Invalid option. Please select a valid number.${plain}\n"
+            echo -e "${red}无效选项，请输入正确的编号。${plain}\n"
             show_log
             ;;
         esac
@@ -518,8 +518,8 @@ show_log() {
 bbr_menu() {
     echo -e "${green}\t1.${plain} Enable BBR"
     echo -e "${green}\t2.${plain} Disable BBR"
-    echo -e "${green}\t0.${plain} Back to Main Menu"
-    read -rp "Choose an option: " choice
+    echo -e "${green}\t0.${plain} 返回主菜单"
+    read -rp "请选择操作：" choice
     case "$choice" in
     0)
         show_menu
@@ -533,7 +533,7 @@ bbr_menu() {
         bbr_menu
         ;;
     *)
-        echo -e "${red}Invalid option. Please select a valid number.${plain}\n"
+        echo -e "${red}无效选项，请输入正确的编号。${plain}\n"
         bbr_menu
         ;;
     esac
@@ -738,8 +738,8 @@ firewall_menu() {
     echo -e "${green}\t5.${plain} ${green}Enable${plain} Firewall"
     echo -e "${green}\t6.${plain} ${red}Disable${plain} Firewall"
     echo -e "${green}\t7.${plain} Firewall Status"
-    echo -e "${green}\t0.${plain} Back to Main Menu"
-    read -rp "Choose an option: " choice
+    echo -e "${green}\t0.${plain} 返回主菜单"
+    read -rp "请选择操作：" choice
     case "$choice" in
     0)
         show_menu
@@ -773,7 +773,7 @@ firewall_menu() {
         firewall_menu
         ;;
     *)
-        echo -e "${red}Invalid option. Please select a valid number.${plain}\n"
+        echo -e "${red}无效选项，请输入正确的编号。${plain}\n"
         firewall_menu
         ;;
     esac
@@ -807,11 +807,11 @@ install_firewall() {
 
 open_ports() {
     # Prompt the user to enter the ports they want to open
-    read -rp "Enter the ports you want to open (e.g. 80,443,2053 or range 400-500): " ports
+    read -rp "请输入要放行的端口（例如 80,443,2053 或范围 400-500）：" ports
 
     # Check if the input is valid
     if ! [[ $ports =~ ^([0-9]+|[0-9]+-[0-9]+)(,([0-9]+|[0-9]+-[0-9]+))*$ ]]; then
-        echo "Error: Invalid input. Please enter a comma-separated list of ports or a range of ports (e.g. 80,443,2053 or 400-500)." >&2
+        echo "错误：输入无效。请输入逗号分隔的端口列表或端口范围（例如 80,443,2053 或 400-500）。" >&2
         exit 1
     fi
 
@@ -855,15 +855,15 @@ delete_ports() {
     echo "Do you want to delete rules by:"
     echo "1) Rule numbers"
     echo "2) Ports"
-    read -rp "Enter your choice (1 or 2): " choice
+    read -rp "请输入你的选择（1 或 2）：" choice
 
     if [[ $choice -eq 1 ]]; then
         # Deleting by rule numbers
-        read -rp "Enter the rule numbers you want to delete (1, 2, etc.): " rule_numbers
+        read -rp "请输入要删除的规则编号（如 1,2 等）：" rule_numbers
 
         # Validate the input
         if ! [[ $rule_numbers =~ ^([0-9]+)(,[0-9]+)*$ ]]; then
-            echo "Error: Invalid input. Please enter a comma-separated list of rule numbers." >&2
+            echo "错误：输入无效。请输入逗号分隔的规则编号。" >&2
             exit 1
         fi
 
@@ -878,11 +878,11 @@ delete_ports() {
 
     elif [[ $choice -eq 2 ]]; then
         # Deleting by ports
-        read -rp "Enter the ports you want to delete (e.g. 80,443,2053 or range 400-500): " ports
+        read -rp "请输入要删除的端口（例如 80,443,2053 或范围 400-500）：" ports
 
         # Validate the input
         if ! [[ $ports =~ ^([0-9]+|[0-9]+-[0-9]+)(,([0-9]+|[0-9]+-[0-9]+))*$ ]]; then
-            echo "Error: Invalid input. Please enter a comma-separated list of ports or a range of ports (e.g. 80,443,2053 or 400-500)." >&2
+            echo "错误：输入无效。请输入逗号分隔的端口列表或端口范围（例如 80,443,2053 或 400-500）。" >&2
             exit 1
         fi
 
@@ -946,8 +946,8 @@ update_geo() {
     echo -e "${green}\t2.${plain} chocolate4u (geoip_IR.dat, geosite_IR.dat)"
     echo -e "${green}\t3.${plain} runetfreedom (geoip_RU.dat, geosite_RU.dat)"
     echo -e "${green}\t4.${plain} All"
-    echo -e "${green}\t0.${plain} Back to Main Menu"
-    read -rp "Choose an option: " choice
+    echo -e "${green}\t0.${plain} 返回主菜单"
+    read -rp "请选择操作：" choice
 
     case "$choice" in
     0)
@@ -974,7 +974,7 @@ update_geo() {
         restart
         ;;
     *)
-        echo -e "${red}Invalid option. Please select a valid number.${plain}\n"
+        echo -e "${red}无效选项，请输入正确的编号。${plain}\n"
         update_geo
         ;;
     esac
@@ -1010,9 +1010,9 @@ ssl_cert_issue_main() {
     echo -e "${green}\t4.${plain} Show Existing Domains"
     echo -e "${green}\t5.${plain} Set Cert paths for the panel"
     echo -e "${green}\t6.${plain} Get SSL for IP Address (6-day cert, auto-renews)"
-    echo -e "${green}\t0.${plain} Back to Main Menu"
+    echo -e "${green}\t0.${plain} 返回主菜单"
 
-    read -rp "Choose an option: " choice
+    read -rp "请选择操作：" choice
     case "$choice" in
     0)
         show_menu
@@ -1028,7 +1028,7 @@ ssl_cert_issue_main() {
         else
             echo "Existing domains:"
             echo "$domains"
-            read -rp "Please enter a domain from the list to revoke the certificate: " domain
+            read -rp "请从列表中输入要吊销证书的域名：" domain
             if echo "$domains" | grep -qw "$domain"; then
                 ~/.acme.sh/acme.sh --revoke -d ${domain}
                 LOGI "Certificate revoked for domain: $domain"
@@ -1045,7 +1045,7 @@ ssl_cert_issue_main() {
         else
             echo "Existing domains:"
             echo "$domains"
-            read -rp "Please enter a domain from the list to renew the SSL certificate: " domain
+            read -rp "请从列表中输入要续期 SSL 证书的域名：" domain
             if echo "$domains" | grep -qw "$domain"; then
                 ~/.acme.sh/acme.sh --renew -d ${domain} --force
                 LOGI "Certificate forcefully renewed for domain: $domain"
@@ -1082,7 +1082,7 @@ ssl_cert_issue_main() {
         else
             echo "Available domains:"
             echo "$domains"
-            read -rp "Please choose a domain to set the panel paths: " domain
+            read -rp "请选择一个域名用于设置面板路径：" domain
 
             if echo "$domains" | grep -qw "$domain"; then
                 local webCertFile="/root/cert/${domain}/fullchain.pem"
@@ -1116,7 +1116,7 @@ ssl_cert_issue_main() {
         ;;
 
     *)
-        echo -e "${red}Invalid option. Please select a valid number.${plain}\n"
+        echo -e "${red}无效选项，请输入正确的编号。${plain}\n"
         ssl_cert_issue_main
         ;;
     esac
@@ -1144,7 +1144,7 @@ ssl_cert_issue_for_ip() {
     
     # Ask for optional IPv6
     local ipv6_addr=""
-    read -rp "Do you have an IPv6 address to include? (leave empty to skip): " ipv6_addr
+    read -rp "是否要包含 IPv6 地址？（留空跳过）：" ipv6_addr
     ipv6_addr="${ipv6_addr// /}"  # Trim whitespace
     
     # check for acme.sh first
@@ -1199,7 +1199,7 @@ ssl_cert_issue_for_ip() {
     
     # Choose port for HTTP-01 listener (default 80, allow override)
     local WebPort=""
-    read -rp "Port to use for ACME HTTP-01 listener (default 80): " WebPort
+    read -rp "用于 ACME HTTP-01 监听的端口（默认 80）：" WebPort
     WebPort="${WebPort:-80}"
     if ! [[ "${WebPort}" =~ ^[0-9]+$ ]] || ((WebPort < 1 || WebPort > 65535)); then
         LOGE "Invalid port provided. Falling back to 80."
@@ -1215,7 +1215,7 @@ ssl_cert_issue_for_ip() {
             LOGI "Port ${WebPort} is currently in use."
 
             local alt_port=""
-            read -rp "Enter another port for acme.sh standalone listener (leave empty to abort): " alt_port
+            read -rp "请输入 acme.sh 独立监听的其他端口（留空取消）：" alt_port
             alt_port="${alt_port// /}"
             if [[ -z "${alt_port}" ]]; then
                 LOGE "Port ${WebPort} is busy; cannot proceed with issuance."
@@ -1355,16 +1355,16 @@ ssl_cert_issue() {
     # get the domain here, and we need to verify it
     local domain=""
     while true; do
-        read -rp "Please enter your domain name: " domain
+        read -rp "请输入你的域名：" domain
         domain="${domain// /}"  # Trim whitespace
         
         if [[ -z "$domain" ]]; then
-            LOGE "Domain name cannot be empty. Please try again."
+            LOGE "域名不能为空，请重试。"
             continue
         fi
         
         if ! is_domain "$domain"; then
-            LOGE "Invalid domain format: ${domain}. Please enter a valid domain name."
+            LOGE "域名格式无效：${domain}. 请输入有效的域名。"
             continue
         fi
         
@@ -1394,7 +1394,7 @@ ssl_cert_issue() {
 
     # get the port number for the standalone server
     local WebPort=80
-    read -rp "Please choose which port to use (default is 80): " WebPort
+    read -rp "请选择要使用的端口（默认 80）：" WebPort
     if [[ ${WebPort} -gt 65535 || ${WebPort} -lt 1 ]]; then
         LOGE "Your input ${WebPort} is invalid, will use default port 80."
         WebPort=80
@@ -1416,12 +1416,12 @@ ssl_cert_issue() {
 
     LOGI "Default --reloadcmd for ACME is: ${yellow}x-ui restart"
     LOGI "This command will run on every certificate issue and renew."
-    read -rp "Would you like to modify --reloadcmd for ACME? (y/n): " setReloadcmd
+    read -rp "是否需要修改 ACME 的 --reloadcmd？(y/n)：" setReloadcmd
     if [[ "$setReloadcmd" == "y" || "$setReloadcmd" == "Y" ]]; then
         echo -e "\n${green}\t1.${plain} Preset: systemctl reload nginx ; x-ui restart"
         echo -e "${green}\t2.${plain} Input your own command"
         echo -e "${green}\t0.${plain} Keep default reloadcmd"
-        read -rp "Choose an option: " choice
+        read -rp "请选择操作：" choice
         case "$choice" in
         1)
             LOGI "Reloadcmd is: systemctl reload nginx ; x-ui restart"
@@ -1429,7 +1429,7 @@ ssl_cert_issue() {
             ;;
         2)  
             LOGD "It's recommended to put x-ui restart at the end, so it won't raise an error if other services fails"
-            read -rp "Please enter your reloadcmd (example: systemctl reload nginx ; x-ui restart): " reloadCmd
+            read -rp "请输入 reloadcmd（示例：systemctl reload nginx ; x-ui restart）：" reloadCmd
             LOGI "Your reloadcmd is: ${reloadCmd}"
             ;;
         *)
@@ -1467,7 +1467,7 @@ ssl_cert_issue() {
     fi
 
     # Prompt user to set panel paths after successful certificate installation
-    read -rp "Would you like to set this certificate for the panel? (y/n): " setPanel
+    read -rp "是否将此证书应用到面板？(y/n)：" setPanel
     if [[ "$setPanel" == "y" || "$setPanel" == "Y" ]]; then
         local webCertFile="/root/cert/${domain}/fullchain.pem"
         local webKeyFile="/root/cert/${domain}/privkey.pem"
@@ -1513,19 +1513,19 @@ ssl_cert_issue_CF() {
 
         CF_Domain=""
 
-        LOGD "Please set a domain name:"
-        read -rp "Input your domain here: " CF_Domain
+        LOGD "请设置域名："
+        read -rp "请在此输入域名：" CF_Domain
         LOGD "Your domain name is set to: ${CF_Domain}"
 
         # Set up Cloudflare API details
         CF_GlobalKey=""
         CF_AccountEmail=""
-        LOGD "Please set the API key:"
-        read -rp "Input your key here: " CF_GlobalKey
+        LOGD "请设置 API Key："
+        read -rp "请在此输入 Key：" CF_GlobalKey
         LOGD "Your API key is: ${CF_GlobalKey}"
 
-        LOGD "Please set up registered email:"
-        read -rp "Input your email here: " CF_AccountEmail
+        LOGD "请设置注册邮箱："
+        read -rp "请在此输入邮箱：" CF_AccountEmail
         LOGD "Your registered email address is: ${CF_AccountEmail}"
 
         # Set the default CA to Let's Encrypt
@@ -1563,12 +1563,12 @@ ssl_cert_issue_CF() {
 
         LOGI "Default --reloadcmd for ACME is: ${yellow}x-ui restart"
         LOGI "This command will run on every certificate issue and renew."
-        read -rp "Would you like to modify --reloadcmd for ACME? (y/n): " setReloadcmd
+        read -rp "是否需要修改 ACME 的 --reloadcmd？(y/n)：" setReloadcmd
         if [[ "$setReloadcmd" == "y" || "$setReloadcmd" == "Y" ]]; then
             echo -e "\n${green}\t1.${plain} Preset: systemctl reload nginx ; x-ui restart"
             echo -e "${green}\t2.${plain} Input your own command"
             echo -e "${green}\t0.${plain} Keep default reloadcmd"
-            read -rp "Choose an option: " choice
+            read -rp "请选择操作：" choice
             case "$choice" in
             1)
                 LOGI "Reloadcmd is: systemctl reload nginx ; x-ui restart"
@@ -1576,7 +1576,7 @@ ssl_cert_issue_CF() {
                 ;;
             2)  
                 LOGD "It's recommended to put x-ui restart at the end, so it won't raise an error if other services fails"
-                read -rp "Please enter your reloadcmd (example: systemctl reload nginx ; x-ui restart): " reloadCmd
+                read -rp "请输入 reloadcmd（示例：systemctl reload nginx ; x-ui restart）：" reloadCmd
                 LOGI "Your reloadcmd is: ${reloadCmd}"
                 ;;
             *)
@@ -1608,7 +1608,7 @@ ssl_cert_issue_CF() {
         fi
 
         # Prompt user to set panel paths after successful certificate installation
-        read -rp "Would you like to set this certificate for the panel? (y/n): " setPanel
+        read -rp "是否将此证书应用到面板？(y/n)：" setPanel
         if [[ "$setPanel" == "y" || "$setPanel" == "Y" ]]; then
             local webCertFile="${certPath}/fullchain.pem"
             local webKeyFile="${certPath}/privkey.pem"
@@ -1690,8 +1690,8 @@ iplimit_main() {
     echo -e "${green}\t8.${plain} Service Status"
     echo -e "${green}\t9.${plain} Service Restart"
     echo -e "${green}\t10.${plain} Uninstall Fail2ban and IP Limit"
-    echo -e "${green}\t0.${plain} Back to Main Menu"
-    read -rp "Choose an option: " choice
+    echo -e "${green}\t0.${plain} 返回主菜单"
+    read -rp "请选择操作：" choice
     case "$choice" in
     0)
         show_menu
@@ -1705,7 +1705,7 @@ iplimit_main() {
         fi
         ;;
     2)
-        read -rp "Please enter new Ban Duration in Minutes [default 30]: " NUM
+        read -rp "请输入新的封禁时长（分钟）【默认 30】：" NUM
         if [[ $NUM =~ ^[0-9]+$ ]]; then
             create_iplimit_jails ${NUM}
             if [[ $release == "alpine" ]]; then
@@ -1714,7 +1714,7 @@ iplimit_main() {
                 systemctl restart fail2ban
             fi
         else
-            echo -e "${red}${NUM} is not a number! Please, try again.${plain}"
+            echo -e "${red}${NUM} 不是数字！请重试。${plain}"
         fi
         iplimit_main
         ;;
@@ -1735,24 +1735,24 @@ iplimit_main() {
         iplimit_main
         ;;
     5)
-        read -rp "Enter the IP address you want to ban: " ban_ip
+        read -rp "请输入要封禁的 IP 地址：" ban_ip
         ip_validation
         if [[ $ban_ip =~ $ipv4_regex || $ban_ip =~ $ipv6_regex ]]; then
             fail2ban-client set 3x-ipl banip "$ban_ip"
             echo -e "${green}IP Address ${ban_ip} has been banned successfully.${plain}"
         else
-            echo -e "${red}Invalid IP address format! Please try again.${plain}"
+            echo -e "${red}IP 地址格式无效！请重试。${plain}"
         fi
         iplimit_main
         ;;
     6)
-        read -rp "Enter the IP address you want to unban: " unban_ip
+        read -rp "请输入要解封的 IP 地址：" unban_ip
         ip_validation
         if [[ $unban_ip =~ $ipv4_regex || $unban_ip =~ $ipv6_regex ]]; then
             fail2ban-client set 3x-ipl unbanip "$unban_ip"
             echo -e "${green}IP Address ${unban_ip} has been unbanned successfully.${plain}"
         else
-            echo -e "${red}Invalid IP address format! Please try again.${plain}"
+            echo -e "${red}IP 地址格式无效！请重试。${plain}"
         fi
         iplimit_main
         ;;
@@ -1777,7 +1777,7 @@ iplimit_main() {
         iplimit_main
         ;;
     *)
-        echo -e "${red}Invalid option. Please select a valid number.${plain}\n"
+        echo -e "${red}无效选项，请输入正确的编号。${plain}\n"
         iplimit_main
         ;;
     esac
@@ -1883,8 +1883,8 @@ install_iplimit() {
 remove_iplimit() {
     echo -e "${green}\t1.${plain} Only remove IP Limit configurations"
     echo -e "${green}\t2.${plain} Uninstall Fail2ban and IP Limit"
-    echo -e "${green}\t0.${plain} Back to Main Menu"
-    read -rp "Choose an option: " num
+    echo -e "${green}\t0.${plain} 返回主菜单"
+    read -rp "请选择操作：" num
     case "$num" in
     1)
         rm -f /etc/fail2ban/filter.d/3x-ipl.conf
@@ -1942,7 +1942,7 @@ remove_iplimit() {
         show_menu
         ;;
     *)
-        echo -e "${red}Invalid option. Please select a valid number.${plain}\n"
+        echo -e "${red}无效选项，请输入正确的编号。${plain}\n"
         remove_iplimit
         ;;
     esac
@@ -2097,7 +2097,7 @@ SSH_port_forwarding() {
     fi
     if [[ -z "$existing_cert" && -z "$existing_key" && (-z "$existing_listenIP" || "$existing_listenIP" == "0.0.0.0") ]]; then
         echo -e "\n${red}Warning: No Cert and Key found! The panel is not secure.${plain}"
-        echo "Please obtain a certificate or set up SSH port forwarding."
+        echo "请先申请证书或配置 SSH 端口转发。"
     fi
 
     if [[ -n "$existing_listenIP" && "$existing_listenIP" != "0.0.0.0" && (-z "$existing_cert" && -z "$existing_key") ]]; then
@@ -2110,22 +2110,22 @@ SSH_port_forwarding() {
         echo -e "${yellow}http://localhost:2222${existing_webBasePath}${plain}"
     fi
 
-    echo -e "\nChoose an option:"
+    echo -e "\n请选择操作："
     echo -e "${green}1.${plain} Set listen IP"
     echo -e "${green}2.${plain} Clear listen IP"
-    echo -e "${green}0.${plain} Back to Main Menu"
-    read -rp "Choose an option: " num
+    echo -e "${green}0.${plain} 返回主菜单"
+    read -rp "请选择操作：" num
 
     case "$num" in
     1)
         if [[ -z "$existing_listenIP" || "$existing_listenIP" == "0.0.0.0" ]]; then
-            echo -e "\nNo listenIP configured. Choose an option:"
+            echo -e "\n未配置 listenIP，请选择操作："
             echo -e "1. Use default IP (127.0.0.1)"
             echo -e "2. Set a custom IP"
-            read -rp "Select an option (1 or 2): " listen_choice
+            read -rp "请选择（1 或 2）：" listen_choice
 
             config_listenIP="127.0.0.1"
-            [[ "$listen_choice" == "2" ]] && read -rp "Enter custom IP to listen on: " config_listenIP
+            [[ "$listen_choice" == "2" ]] && read -rp "请输入自定义监听 IP：" config_listenIP
 
             ${xui_folder}/x-ui setting -listenIP "${config_listenIP}" >/dev/null 2>&1
             echo -e "${green}listen IP has been set to ${config_listenIP}.${plain}"
@@ -2151,7 +2151,7 @@ SSH_port_forwarding() {
         show_menu
         ;;
     *)
-        echo -e "${red}Invalid option. Please select a valid number.${plain}\n"
+        echo -e "${red}无效选项，请输入正确的编号。${plain}\n"
         SSH_port_forwarding
         ;;
     esac
@@ -2220,7 +2220,7 @@ show_menu() {
 ╚────────────────────────────────────────────────╝
 "
     show_status
-    echo && read -rp "Please enter your selection [0-26]: " num
+    echo && read -rp "请输入你的选择 [0-26]：" num
 
     case "${num}" in
     0)
@@ -2305,7 +2305,7 @@ show_menu() {
         run_speedtest
         ;;
     *)
-        LOGE "Please enter the correct number [0-26]"
+        LOGE "请输入正确编号 [0-26]"
         ;;
     esac
 }
