@@ -54,4 +54,4 @@ For full documentation, please visit the [project Wiki](https://github.com/MHSan
 
 ## Stargazers over Time
 
-[![Stargazers over time](https://starchart.cc/MHSanaei/3x-ui.svg?variant=adaptive)](https://starchart.cc/MHSanaei/3x-ui)
+[![Stargazers over time](https://starchart.cc/zhouxingchi-max/3x-ui.svg?variant=adaptive)](https://starchart.cc/MHSanaei/3x-ui)
